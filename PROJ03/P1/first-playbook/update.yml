@@ -1,0 +1,8 @@
+---
+- name: Playbook to update system
+  hosts: all
+  become: yes
+
+  roles:
+    - main
+

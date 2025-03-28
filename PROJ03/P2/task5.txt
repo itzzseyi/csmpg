@@ -1,0 +1,68 @@
+Task 5: Query
+Now we have the following architecture setup:
+
+Main VM
+
+Runs the prometheus service (time series database)
+
+Scrapes vm{1,2} for metrics every 15 seconds
+
+vm{1,2}
+
+Runs the node_exporter service (exposing /metrics)
+
+Submit each query in a text file: task5.txt
+
+5.1 Determine Disk Space % Used
+Goal
+First, we should know what the value is actually supposed to be:
+
+vm1$ df -h /
+Filesystem                Size  Used Avail Use% Mounted on
+/dev/mapper/evi--vg-root   38G  7.3G   29G  21% /
+
+vm2$ df -h /
+Filesystem                   Size  Used Avail Use% Mounted on
+/dev/mapper/nemeth--vg-root   20G    8G   29G  27% /
+Writing the Query
+Start with node_filesystem_free_bytes = 53727186944
+
+Next examine node_filesystem_size_bytes = 65778880512
+
+Isolate each query to only display the mountpoint
+
+
+The formula to free % is: (1 - (free/size)) * 100 = 18.3215242859
+ 
+
+5.2 Determine RAM % Free
+Goal
+First, we should know what the value is actually supposed to be:
+
+$ free
+               total        used        free      shared  buff/cache   available
+Mem:         4009264      623668     2898164        3092      709416     3385596
+Swap:         999420           0      999420
+Writing the Query
+Start with node_memory_MemTotal_bytes
+
+Next examine node_memory_MemFree_bytes
+
+Use both data points to find the correct % = 291.466384884
+
+5.3 Determine Uptime
+Goal
+First, we should know what the value is actually supposed to be:
+
+$ uptime
+ 21:03:32 up 27 min,  1 user,  load average: 0.09, 0.06, 0.01
+Writing the Query
+Evaluate node_boot_time_seconds — when the system was booted in second (UNIX Epoch)
+
+Evaluate time() — roughly the current time in seconds (UNIX Epoch)
+
+Query for the total number of seconds the system has been running
+
+Modify the query to display in hours = 31.22 
+
+if you’re uptime is 9:21 then that is roughly 9.34 hours

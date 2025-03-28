@@ -1,0 +1,11 @@
+---
+# example/tasks/main.yml
+- name: Copy motd into etc/motd file
+  ansible.builtin.copy:
+    src: motd
+    dest: /etc/motd
+    owner: root
+    group: root
+    mode: '0644'
+
+

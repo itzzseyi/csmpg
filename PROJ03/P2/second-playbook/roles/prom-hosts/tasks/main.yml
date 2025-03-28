@@ -1,0 +1,13 @@
+- name: Copy Prometheus configuration file
+  template:
+    src: prometheus.yml.j2
+    dest: /opt/prometheus-2.51.1.linux-arm64/prometheus.yml
+    owner: prometheus
+    group: prometheus
+    mode: '0644'
+
+- name: Restart Prometheus service
+  service:
+    name: prometheus
+    state: restarted
+

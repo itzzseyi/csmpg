@@ -1,0 +1,6 @@
+- name: Configure Prometheus hosts
+  hosts: control
+  become: true
+  roles:
+    - prom-hosts
+

@@ -1,0 +1,11 @@
+# site.yml
+
+---
+- name: Apply common server configurations
+  hosts: fleet
+  remote_user: nsync
+  become: true
+
+  roles:
+    - common
+

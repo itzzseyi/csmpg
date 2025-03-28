@@ -1,0 +1,22 @@
+# main.yml
+
+---
+- name: Create the ansible user
+  ansible.builtin.user:
+    name: nsync
+    create_home: yes
+
+- name: Copy the pubkey into authorized_keys
+  ansible.posix.authorized_key:
+    user: nsync
+    state: present
+    key: "{{ lookup('file', '/home/debian/.ssh/id_rsa.pub') }}"
+
+- name: Copy ans into sudoers.d
+  ansible.builtin.copy:
+    src: files/ans
+    dest: /etc/sudoers.d/ans
+    owner: root
+    group: root
+    mode: '0440'
+

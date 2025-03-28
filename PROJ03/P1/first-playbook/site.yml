@@ -1,0 +1,12 @@
+---
+# Main playbook for the entire "site"
+- name: Apply the example configuration to all nodes
+  hosts: all
+  remote_user: exo
+  become: true
+
+  roles:
+    - example
+    - motd
+    - ftp 
+

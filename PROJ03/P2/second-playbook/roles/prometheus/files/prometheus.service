@@ -1,0 +1,18 @@
+[Unit]
+Description=Prometheus
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=prometheus
+Group=prometheus
+Type=simple
+ExecStartPre=/opt/prometheus-2.51.1.linux-arm64/promtool check config /opt/prometheus-2.51.1.linux-arm64/prometheus.yml
+ExecStart=/opt/prometheus-2.51.1.linux-arm64/prometheus \
+    --config.file /opt/prometheus-2.51.1.linux-arm64/prometheus.yml \
+    --storage.tsdb.path /opt/prometheus-2.51.1.linux-arm64/data/ \
+    --web.console.templates=/opt/prometheus-2.51.1.linux-arm64/consoles \
+    --web.console.libraries=/opt/prometheus-2.51.1.linux-arm64/console_libraries
+
+[Install]
+WantedBy=multi-user.target

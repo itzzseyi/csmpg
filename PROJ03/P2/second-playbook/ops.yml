@@ -1,0 +1,11 @@
+# ops.yml
+
+---
+- name: Apply banana role to ops hosts
+  hosts: ops
+  remote_user: nsync
+  become: true
+
+  roles:
+    - banana
+

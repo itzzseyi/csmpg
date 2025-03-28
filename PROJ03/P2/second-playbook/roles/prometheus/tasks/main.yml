@@ -1,0 +1,50 @@
+- name: Ensure prometheus user exists
+  user: 
+    name: prometheus
+    shell: /usr/sbin/nologin
+    system: yes
+    createhome: no
+
+- name: Download and extract Prometheus
+  unarchive:
+    src: https://github.com/prometheus/prometheus/releases/download/v2.45.5/prometheus-2.45.5.linux-arm64.tar.gz
+    dest: /opt/
+    remote_src: yes
+    owner: prometheus
+    group: prometheus
+
+- name: Copy the Prometheus systemd service file to /etc/systemd/system/
+  copy:
+    src: /etc/systemd/system/prometheus.service
+    dest: /etc/systemd/system/prometheus.service
+
+- name: Reload systemd
+  systemd:
+    daemon_reload: yes
+
+- name: Start and enable Prometheus service
+  systemd:
+    name: prometheus
+    state: started
+    enabled: yes
+
+- name: Ensure ufw is installed
+  apt:
+    name: ufw
+    state: present
+
+- name: Open port one
+  ufw:
+    rule: allow
+    port: '22'
+    proto: tcp
+
+- name: Open port two
+  ufw:
+    rule: allow
+    port: '9090'
+    proto: tcp
+
+- name: Enable ufw
+  command: ufw --force enable
+

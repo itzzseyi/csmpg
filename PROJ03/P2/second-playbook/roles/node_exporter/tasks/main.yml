@@ -1,0 +1,49 @@
+- name: Ensure node_exporter user exists
+  user: 
+    name: node_exporter
+    shell: /usr/sbin/nologin
+    system: yes
+    createhome: no
+
+- name: Download and extract node_exporter
+  unarchive:
+    src: https://github.com/prometheus/node_exporter/releases/download/v1.7.0/node_exporter-1.7.0.linux-arm64.tar.gz
+    dest: /opt/
+    remote_src: yes
+    owner: node_exporter
+    group: node_exporter
+
+- name: Copy the node_exporter systemd service file to /etc/systemd/system/
+  copy:
+    src: node_exporter.service
+    dest: /etc/systemd/system/node_exporter.service
+
+- name: Reload systemd
+  systemd:
+    daemon_reload: yes
+
+- name: Start and enable node_exporter service
+  systemd:
+    name: node_exporter
+    state: started
+    enabled: yes
+
+- name: Ensure ufw is installed
+  apt:
+    name: ufw
+    state: present
+
+- name: Open port one
+  ufw:
+    rule: allow
+    port: '22'
+    proto: tcp
+
+- name: Open port two
+  ufw:
+    rule: allow
+    port: '9100'
+    proto: tcp
+
+- name: Enable ufw
+  command: ufw --force enable

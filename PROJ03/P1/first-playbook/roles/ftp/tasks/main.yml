@@ -1,0 +1,22 @@
+- name: Install vsftpd package
+  ansible.builtin.apt:
+    name: vsftpd
+    state: present
+
+
+- name: Enable vsftpd service
+  ansible.builtin.systemd_service:
+    name: vsftpd
+    enabled: yes
+
+
+- name: Start vsftpd service
+  ansible.builtin.systemd_service:
+    name: vsftpd
+    state: started
+
+- name: create ftp_user
+  ansible.builtin.user:
+    name: ftp_user
+    state: present 
+

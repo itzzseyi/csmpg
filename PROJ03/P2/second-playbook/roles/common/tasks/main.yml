@@ -1,0 +1,28 @@
+# common/tasks/main.yml
+
+---
+- name: Set timezone to America/Los_Angeles
+  community.general.timezone:
+    name: America/Los_Angeles
+
+- name: Configure /etc/hosts file
+  ansible.builtin.template:
+    src: templates/hosts.j2
+    dest: /etc/hosts
+  become: true
+  tags:
+    - hosts
+
+- name: Set message of the day
+  ansible.builtin.copy:
+    src: files/motd
+    dest: /etc/motd
+
+- name: Install packages vim and tar
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - vim
+    - tar
+

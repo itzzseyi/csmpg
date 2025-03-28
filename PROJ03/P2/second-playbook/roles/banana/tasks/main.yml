@@ -1,0 +1,58 @@
+---
+- name: Install nginx
+  ansible.builtin.apt:
+    name: nginx
+    state: present
+
+- name: Download the great banana website
+  ansible.builtin.get_url:
+    url: http://scrivnor.cikeys.com/files/website.tar.gz
+    dest: /tmp/great_banana_website.tar.gz
+
+- name: Unarchive the banana website
+  ansible.builtin.unarchive:
+    src: /tmp/great_banana_website.tar.gz
+    dest: /usr/share/nginx/html
+    remote_src: yes
+
+- name: Set permissions for the website directory
+  ansible.builtin.file:
+    path: /var/www/banana
+    owner: www-data
+    group: www-data
+    mode: '0755'
+    state: directory
+
+- name: Install website files
+  ansible.builtin.copy:
+    src: /var/www/banana
+    dest: /usr/share/nginx/html
+    remote_src: true
+
+- name: Install ufw
+  ansible.builtin.apt:
+    name: ufw
+    state: present
+
+- name: Allow SSH traffic
+  community.general.ufw:
+    rule: allow
+    port: '22'
+    proto: tcp
+
+- name: Allow HTTP traffic
+  community.general.ufw:
+    rule: allow
+    port: '80'
+    proto: tcp
+
+- name: Enable UFW
+  community.general.ufw:
+    state: enabled
+    direction: incoming
+
+- name: Ensure nginx is running and enabled
+  ansible.builtin.systemd:
+    name: nginx
+    state: started
+    enabled: yes

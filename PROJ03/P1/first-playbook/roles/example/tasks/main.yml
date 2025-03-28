@@ -1,0 +1,16 @@
+---
+# example/tasks/main.yml
+- name: Copy file with owner and permissions
+  ansible.builtin.copy:
+    src: foo
+    dest: /root/foo
+    owner: root
+    group: root
+    mode: '0644'
+  become: true
+
+- name: Install tmux package
+  ansible.builtin.apt:
+    name: tmux
+    state: present
+  become: true

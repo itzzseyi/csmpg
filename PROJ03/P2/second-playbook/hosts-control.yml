@@ -1,0 +1,12 @@
+# hosts-control.yml
+
+---
+- name: Apply /etc/hosts task to control node
+  hosts: control
+  remote_user: nsync
+  become: true
+  tags: hosts
+
+  roles:
+    - common
+

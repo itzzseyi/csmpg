@@ -1,0 +1,24 @@
+# devs/tasks/main.yml
+- name: Create users and install public keys
+  ansible.builtin.user:
+    name: "{{ item.name }}"
+    create_home: yes
+  loop: "{{ users }}"
+  tags:
+    - create_users
+
+- name: Add public keys to authorized_keys
+  ansible.posix.authorized_key:
+    user: "{{ item.name }}"
+    key: "{{ item.public_key }}"
+  loop: "{{ users }}"
+  tags:
+    - add_public_keys
+
+- name: Install requested software
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ software_list }}"
+  tags:
+    - install_software
